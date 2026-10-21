@@ -19,18 +19,21 @@ button{background:#22304d;color:#fff;border:1px solid #4a5f8f;border-radius:10px
 input{background:#0e1420;color:#fff;border:1px solid #4a5f8f;border-radius:8px;padding:8px;font:inherit}
 #au{z-index:6}.r{display:flex;gap:6px}.r button{flex:1}#who{font-weight:600}
 ol{margin:0;padding-left:22px}small{opacity:.7}
+#top{box-shadow:0 2px 12px #0008;background:linear-gradient(#1b2640,#121a2b)}#mb,#ab{background:linear-gradient(#1d2a47,#131c31);border:1px solid #4a5f8f;box-shadow:0 10px 40px #000a}button:active{transform:scale(.96);filter:brightness(1.2)}button{background:linear-gradient(#2c3f66,#1c2a47)}
+#gb{display:flex;justify-content:center;min-height:44px}#ak{flex-direction:column;gap:10px}
 </style></head><body>
 <div id="top"><button id="bm">☰</button><div id="h"></div></div>
 <div id="cw"><canvas id="c"></canvas><div id="msg"></div></div>
 <div id="pad"><button class="u" data-d="0,-1">▲</button><button data-d="-1,0" style="grid-row:2">◀</button><button data-d="0,1" style="grid-row:2">▼</button><button data-d="1,0" style="grid-row:2">▶</button></div>
 <div id="menu"><div id="mb"><b>💎 Cristal Quest</b><div id="who"></div><input id="nm" maxlength="16" placeholder="Tu nombre (sin cuenta)">
-<button id="bs">▶ Solo (nivel <span id="lvn">1</span>)</button><div class="r"><button id="lp">◀ Nivel</button><button id="ln">Nivel ▶</button></div><button id="bo">🌐 Carrera online</button><button id="bt">🎓 Tutorial</button><button id="bp"></button><button id="bn"></button><button id="br">🏆 Ranking mundial</button><button id="bx">↻ Reiniciar nivel</button><button id="bu"></button><button id="bc">Cerrar</button><div id="info"></div></div></div>
-<div id="au"><div id="ab"><b>👤 Cuenta Cristal Quest</b><div class="r"><button id="am1">✉ Correo</button><button id="am2">📱 Celular</button></div>
+<button id="bs">▶ Solo (nivel <span id="lvn">1</span>)</button><div class="r"><button id="lp">◀ Nivel</button><button id="ln">Nivel ▶</button></div><button id="bo">🌐 Carrera online</button><button id="bt">🎓 Tutorial</button><button id="bp"></button><button id="bn"></button><button id="br">🏆 Ranking mundial</button><div id="chr" class="r" style="flex-wrap:wrap"></div><button id="bz"></button><button id="bx">↻ Reiniciar nivel</button><button id="bu"></button><button id="bc">Cerrar</button><div id="info"></div></div></div>
+<div id="au"><div id="ab"><b>👤 Cuenta Cristal Quest</b><div id="gb"></div><small id="gh"></small><button id="ao">Otras opciones: correo o celular con contraseña ▾</button>
+<div id="ak" style="display:none"><div class="r" id="amr"><button id="am1">✉ Correo</button><button id="am2">📱 Celular</button></div>
 <input id="ai" autocomplete="username"><input id="ap" type="password" placeholder="Contraseña (mín. 6)" autocomplete="current-password"><input id="an" maxlength="16" placeholder="Nickname (visible para todos)">
-<button id="ag">Entrar</button><button id="at"></button><button id="ax">Jugar sin cuenta</button><small id="ae"></small></div></div>
+<button id="ag">Entrar</button><button id="at"></button></div><button id="ax">Jugar sin cuenta</button><small id="ae"></small></div></div>
 <script>
-// ===== CONFIGURACIÓN ONLINE: ID del proyecto Firebase (p) y Clave de API web (k) (ver LEEME.md) =====
-const FB={p:'',k:''};
+// ===== CONFIGURACIÓN ONLINE: ID del proyecto Firebase (p), Clave de API web (k) e ID de cliente web de Google (g) (ver LEEME.md) =====
+const FB={p:'',k:'',g:''};
 const $=i=>document.getElementById(i),cv=$('c'),cx=cv.getContext('2d');
 const D=[[1,0],[-1,0],[0,1],[0,-1]],KC={r:'#ff4d4d',b:'#4da6ff',y:'#ffd23f',g:'#46d369'};
 const TH=[{n:'Bosque',f:['#3f7d3a','#468c42'],w:['#8a7a62','#4a3d2e'],d:'#2a5e28',a:'#7bd36a'},
@@ -75,7 +78,7 @@ $('nm').value=localStorage.nm||'';$('nm').onchange=()=>{localStorage.nm=$('nm').
 const nm=()=>ses?ses.n:($('nm').value||'Jugador').slice(0,16),msg=t=>$('msg').textContent=t;
 function beep(f,d=.1,ty='square'){if(localStorage.mute=='1')return;try{AC=AC||new AudioContext();const o=AC.createOscillator(),g=AC.createGain();o.type=ty;o.frequency.value=f;g.gain.value=.06;o.connect(g);g.connect(AC.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+d);o.stop(AC.currentTime+d)}catch(e){}}
 function burst(x,y,c,n=14){for(let i=0;i<n;i++){const a=Math.random()*6.28,v=1+Math.random()*3;parts.push({x:x+.5,y:y+.5,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:1,c})}}
-function resize(){const w=cv.clientWidth,h=cv.clientHeight,d=devicePixelRatio||1;VW=w;VH=h;TS=Math.floor(w/9);cv.width=w*d;cv.height=h*d;cx.setTransform(d,0,0,d,0,0)}
+function resize(){const w=cv.clientWidth,h=cv.clientHeight,d=devicePixelRatio||1;VW=w;VH=h;TS=Math.floor(w/(+localStorage.z||9));cv.width=w*d;cv.height=h*d;cx.setTransform(d,0,0,d,0,0)}
 addEventListener('resize',resize);
 function start(rows,label,seed,L){route=[];const g=rows.map(r=>[...r]);G={g,W:g[0].length,H:g.length,k:{r:0,b:0,y:0,g:0},w:0,f:0,cr:0,en:[],t:Date.now(),label,done:0,seed,L,fx:0,fy:1,th:TH[(mode=='solo'?(L-1)>>2:seed)%4]};
  g.forEach((row,y)=>row.forEach((c,x)=>{if(c=='P'){G.x=x;G.y=y;G.rx=x;G.ry=y;row[x]='.'}else if(c=='e'||c=='v'||c=='h'){G.en.push({x,y,rx:x,ry:y,dx:c=='e'?1:0,dy:c=='v'||c=='h'?1:0,h:c=='h'});row[x]='.'}else if(c=='C')G.cr++}));
@@ -141,9 +144,20 @@ function tile(c,tx,ty,t){const s=TS,m=s/2,th=G.th,h=hs(tx,ty);cx.save();cx.trans
  else if(c=='F'){cx.fillStyle='#2a0c06';cx.fillRect(0,0,s,s);for(let i=0;i<3;i++){const fh=s*(.55+.25*Math.sin(t/120+i*2+tx)),w=s*.34,x=s*(.2+i*.3);cx.fillStyle=['#ff3d00','#ff9100','#ffe14d'][i];cx.shadowColor='#f60';cx.shadowBlur=s*.2;cx.beginPath();cx.moveTo(x-w/2,s);cx.quadraticCurveTo(x-w/2,s-fh*.6,x,s-fh);cx.quadraticCurveTo(x+w/2,s-fh*.6,x+w/2,s);cx.fill()}}
  else if(c=='I'){cx.fillStyle=lg(0,0,s,s,'#eafcff','#8fd0ff');cx.fillRect(0,0,s,s);cx.strokeStyle='#fff';cx.lineWidth=2;cx.beginPath();cx.moveTo(s*.2,s*.7);cx.lineTo(s*.45,s*.3);cx.moveTo(s*.55,s*.8);cx.lineTo(s*.8,s*.45);cx.stroke()}
  cx.restore()}
-function blob(x,y,c1,c2,bob,fx,fy,al=1){const s=TS,m=s/2;cx.save();cx.globalAlpha=al;cx.translate(x*s,y*s);cx.fillStyle='#0005';cx.beginPath();cx.ellipse(m,s*.85,s*.3,s*.09,0,0,7);cx.fill();cx.translate(0,-bob*s*.05);
- cx.beginPath();cx.arc(m,m,s*.36,0,7);cx.fillStyle=lg(0,s*.1,0,s*.9,c1,c2);cx.fill();cx.strokeStyle='#0006';cx.lineWidth=2;cx.stroke();
- cx.fillStyle='#fff';for(const o of[-1,1]){cx.beginPath();cx.arc(m+o*s*.13+fx*s*.04,m-s*.05+fy*s*.04,s*.1,0,7);cx.fill()}cx.fillStyle='#012';for(const o of[-1,1]){cx.beginPath();cx.arc(m+o*s*.13+fx*s*.08,m-s*.05+fy*s*.08,s*.045,0,7);cx.fill()}cx.restore()}
+const CH=[{n:'Gema',c:['#7dffbd','#0a9b55'],a:''},{n:'Zorro',c:['#ffb066','#c2570c'],a:'e'},{n:'Robot',c:['#d6deee','#5d6b86'],a:'r'},{n:'Gatito',c:['#b9a4ff','#5b3fd0'],a:'c'},{n:'Astronauta',c:['#ffffff','#8fa9d0'],a:'h'},{n:'Dragón',c:['#ff7b9c','#b01b4f'],a:'d'}];
+let chi=Math.min(+localStorage.ch||0,CH.length-1);
+function blob(x,y,c1,c2,bob,fx,fy,al=1,ac='',K=cx){const s=TS,m=s/2,bl=Date.now()%3200<130,sq=1+Math.abs(bob)*.04;K.save();K.globalAlpha=al;K.translate(x*s,y*s);K.fillStyle='#0005';K.beginPath();K.ellipse(m,s*.85,s*.3,s*.09,0,0,7);K.fill();K.translate(m,s*.85);K.scale(1/sq,sq);K.translate(-m,-s*.85-bob*s*.05);
+ K.fillStyle=c2;K.strokeStyle=c2;K.lineWidth=s*.05;
+ if(ac=='e'||ac=='c'){for(const o of[-1,1]){K.beginPath();K.moveTo(m+o*s*.12,m-s*.22);K.lineTo(m+o*s*.3,m-s*(ac=='e'?.58:.5));K.lineTo(m+o*s*.34,m-s*.1);K.closePath();K.fill()}}
+ if(ac=='r'){K.beginPath();K.moveTo(m,m-s*.3);K.lineTo(m,m-s*.52);K.stroke();K.fillStyle='#ff4d4d';K.shadowColor='#ff4d4d';K.shadowBlur=s*.2;K.beginPath();K.arc(m,m-s*.55,s*.06,0,7);K.fill();K.shadowBlur=0}
+ if(ac=='d'){K.fillStyle='#ffd23f';for(const o of[-1,1]){K.beginPath();K.moveTo(m+o*s*.1,m-s*.3);K.lineTo(m+o*s*.22,m-s*.56);K.lineTo(m+o*s*.28,m-s*.2);K.closePath();K.fill()}}
+ K.beginPath();K.arc(m,m,s*.36,0,7);K.fillStyle=lg(0,s*.1,0,s*.9,c1,c2);K.fill();K.strokeStyle='#0006';K.lineWidth=2;K.stroke();
+ K.fillStyle='#fff3';K.beginPath();K.ellipse(m-s*.12,m-s*.22,s*.1,s*.05,-.5,0,7);K.fill();
+ if(ac=='c'){K.strokeStyle='#0008';K.lineWidth=1.5;for(const o of[-1,1])for(const q of[-.04,.06]){K.beginPath();K.moveTo(m+o*s*.2,m+s*.1+q*s);K.lineTo(m+o*s*.46,m+s*.08+q*s*2);K.stroke()}}
+ K.fillStyle='#fff';for(const o of[-1,1]){K.beginPath();K.ellipse(m+o*s*.13+fx*s*.04,m-s*.05+fy*s*.04,s*.1,bl?s*.015:s*.1,0,0,7);K.fill()}K.fillStyle='#012';if(!bl)for(const o of[-1,1]){K.beginPath();K.arc(m+o*s*.13+fx*s*.08,m-s*.05+fy*s*.08,s*.045,0,7);K.fill()}
+ if(ac=='h'){K.strokeStyle='#bfe9ff';K.lineWidth=s*.05;K.beginPath();K.arc(m,m,s*.41,0,7);K.stroke();K.strokeStyle='#fff9';K.lineWidth=s*.04;K.beginPath();K.arc(m,m,s*.41,3.6,4.4);K.stroke()}
+ K.restore()}
+const MO=Array.from({length:26},()=>({x:Math.random()*360,y:Math.random()*640,v:8+Math.random()*16,p:Math.random()*6,r:1+Math.random()*2}));
 let last=0;function frame(t){requestAnimationFrame(frame);pollPad(t);const dt=Math.min(.05,(t-last)/1000);last=t;if(!G)return;const s=TS,cols=VW/s,rows=VH/s;
  const k=Math.min(1,dt*16);G.rx+=(G.x-G.rx)*k;G.ry+=(G.y-G.ry)*k;for(const e of G.en){e.rx+=(e.x-e.rx)*Math.min(1,dt*8);e.ry+=(e.y-e.ry)*Math.min(1,dt*8)}
  const cl=(v,mx)=>mx<0?mx/2:Math.max(0,Math.min(mx,v));const tx=cl(G.rx+.5-cols/2,G.W-cols),ty=cl(G.ry+.5-rows/2,G.H-rows);cam.x+=(tx-cam.x)*Math.min(1,dt*10);cam.y+=(ty-cam.y)*Math.min(1,dt*10);
@@ -152,8 +166,9 @@ let last=0;function frame(t){requestAnimationFrame(frame);pollPad(t);const dt=Ma
  if(tgt&&route.length){cx.strokeStyle='#fffb';cx.lineWidth=2;cx.beginPath();cx.arc((tgt.x+.5)*s,(tgt.y+.5)*s,s*(.25+.05*Math.sin(t/120)),0,7);cx.stroke()}
  const bob=Math.sin(t/160);for(const e of G.en){cx.save();cx.strokeStyle='#300';cx.lineWidth=2;cx.translate(e.rx*s,e.ry*s);for(let i=-1;i<=1;i++){cx.beginPath();cx.moveTo(s*.2,s*.5+i*s*.2);cx.lineTo(s*.8,s*.5+i*s*.2+Math.sin(t/80+i)*3);cx.stroke()}cx.restore();e.h?blob(e.rx,e.ry,'#c77dff','#5a189a',bob,0,1):blob(e.rx,e.ry,'#ff7b7b','#a10f0f',bob,e.dx,e.dy)}
  for(const p of peers){if(p.id==uid||p.s!=G.seed)continue;blob(p.x,p.y,'#ffd23f','#d98a00',0,0,1,.6);cx.fillStyle='#fff';cx.font='bold '+s*.28+'px system-ui';cx.textAlign='center';cx.fillText(String(p.n).slice(0,8),p.x*s+s/2,p.y*s)}
- const mv=Math.abs(G.x-G.rx)+Math.abs(G.y-G.ry)>.05;blob(G.rx,G.ry,'#7dffbd','#0a9b55',mv?bob:0,G.fx,G.fy);
+ const mv=Math.abs(G.x-G.rx)+Math.abs(G.y-G.ry)>.05;{const q=CH[chi];cx.save();cx.shadowColor=q.c[0];cx.shadowBlur=s*.5;cx.fillStyle=q.c[0]+'33';cx.beginPath();cx.arc((G.rx+.5)*s,(G.ry+.5)*s,s*.5,0,7);cx.fill();cx.restore();blob(G.rx,G.ry,q.c[0],q.c[1],mv?bob:0,G.fx,G.fy,1,q.a)}
  for(const p of parts){p.x+=p.vx*dt;p.y+=p.vy*dt;p.l-=dt*1.6;if(p.l>0){cx.globalAlpha=p.l;cx.fillStyle=p.c;cx.beginPath();cx.arc(p.x*s,p.y*s,s*.07,0,7);cx.fill()}}cx.globalAlpha=1;parts=parts.filter(p=>p.l>0);cx.restore();
+ MO.forEach(o=>{o.y-=dt*o.v;o.x+=Math.sin(t/900+o.p)*dt*8;if(o.y<-8){o.y=VH+8;o.x=Math.random()*VW}cx.globalAlpha=.25+.25*Math.sin(t/400+o.p);cx.fillStyle=G.th.a;cx.beginPath();cx.arc(o.x,o.y,o.r,0,7);cx.fill()});cx.globalAlpha=1;
  const px=(G.rx-cam.x+.5)*s,py=(G.ry-cam.y+.5)*s,g=cx.createRadialGradient(px,py,s*3,px,py,Math.max(VW,VH)*.8);g.addColorStop(0,'#0000');g.addColorStop(1,'#000a');cx.fillStyle=g;cx.fillRect(0,0,VW,VH)}
 // ===== Controles =====
 document.addEventListener('keydown',e=>{if(e.target.tagName=='INPUT')return;const m={ArrowUp:[0,-1],w:[0,-1],ArrowDown:[0,1],s:[0,1],ArrowLeft:[-1,0],a:[-1,0],ArrowRight:[1,0],d:[1,0]}[e.key];if(m){e.preventDefault();step(...m)}});
@@ -183,14 +198,14 @@ const fsGet=async p=>{if(!FB.p)return null;try{const r=await fetch(fsb()+'/'+p,{
 const fsList=async p=>{if(!FB.p)return null;try{const r=await(await fetch(fsb()+'/'+p+'?pageSize=100',{headers:await hd()})).json();return(r.documents||[]).map(d=>({id:d.name.split('/').pop(),...fromF(d)}))}catch(e){return null}};
 const saveRank=()=>best&&ses&&fsSet('rank/'+uid,{name:nm(),level:best,time:tot,ts:Date.now()});
 // ===== Cuentas: correo o celular + contraseña + nickname (Firebase Auth REST) =====
-const ER={EMAIL_EXISTS:'Ese correo/celular ya está registrado.',INVALID_LOGIN_CREDENTIALS:'Datos o contraseña incorrectos.',INVALID_PASSWORD:'Contraseña incorrecta.',EMAIL_NOT_FOUND:'No existe esa cuenta.',WEAK_PASSWORD:'Contraseña muy corta (mín. 6).',INVALID_EMAIL:'Correo/celular no válido.',TOO_MANY_ATTEMPTS_TRY_LATER:'Demasiados intentos, espera un momento.'};
+const ER={EMAIL_EXISTS:'Ese correo/celular ya está registrado.',INVALID_LOGIN_CREDENTIALS:'Datos o contraseña incorrectos.',INVALID_PASSWORD:'Contraseña incorrecta.',EMAIL_NOT_FOUND:'No existe esa cuenta.',WEAK_PASSWORD:'Contraseña muy corta (mín. 6).',INVALID_EMAIL:'Correo/celular no válido.',TOO_MANY_ATTEMPTS_TRY_LATER:'Demasiados intentos, espera un momento.',OPERATION_NOT_ALLOWED:'Activa Google en Firebase: Authentication > Método de acceso.',INVALID_IDP_RESPONSE:'Google rechazó el acceso: revisa el ID de cliente web (FB.g).',FEDERATED_USER_ID_ALREADY_LINKED:'Esa cuenta de Google ya está vinculada a otro usuario.'};
 async function aj(ep,b){const r=await fetch('https://identitytoolkit.googleapis.com/v1/accounts:'+ep+'?key='+FB.k,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}),j=await r.json();if(j.error){const m=j.error.message||'';throw new Error(ER[m]||ER[m.split(' ')[0]]||'Error: '+m)}return j}
 let am='e',ar=0;const aerr=t=>$('ae').textContent=t;
-function aui(){$('an').style.display=ar?'':'none';$('ag').textContent=ar?'Crear cuenta':'Entrar';$('at').textContent=ar?'Ya tengo cuenta':'Crear cuenta nueva';$('ai').placeholder=am=='e'?'Correo (Gmail u otro)':'Celular con código de país';$('ai').type=am=='e'?'email':'tel';$('am1').style.opacity=am=='e'?1:.5;$('am2').style.opacity=am=='p'?1:.5}
+function aui(){$('an').style.display=ar?'':'none';$('ag').textContent=ar?'Crear cuenta':'Entrar';$('at').textContent=ar?'Ya tengo cuenta':'Crear cuenta nueva';$('ai').placeholder=am=='e'?'Correo (Gmail u otro)':'Celular con código de país';$('ai').type=am=='e'?'email':'tel';$('am1').style.opacity=am=='e'?1:.5;$('am2').style.opacity=am=='p'?1:.5;auG()}
 function idOf(){const v=$('ai').value.trim();if(am=='e'){if(!/^\S+@\S+\.\S+$/.test(v))throw new Error('Correo no válido.');return v.toLowerCase()}const d=v.replace(/\D/g,'');if(d.length<7||d.length>15)throw new Error('Celular no válido (7 a 15 dígitos).');return'cel'+d+'@cq-phone.app'}
 function upd(){$('who').textContent=ses?'👤 '+ses.n:'Invitado · el ranking mundial y online requieren cuenta';$('nm').style.display=ses?'none':'';$('bu').textContent=ses?'↪ Cerrar sesión':'👤 Iniciar sesión / Crear cuenta'}
 async function sync(){const d=await fsGet('rank/'+uid);if(d&&d.level>best){best=d.level;lv=Math.max(lv,best);tot=d.time;localStorage.best=best;localStorage.lv=lv;localStorage.tot=tot}saveRank()}
-async function enter(){aerr('');if(!FB.p||!FB.k)return aerr('Cuentas no configuradas (ver LEEME.md).');$('ag').disabled=true;
+async function enter(){aerr('');if(!FB.p||!FB.k)return aerr('Cuentas no configuradas (ver LEEME.md).');if(gp)return gnick();$('ag').disabled=true;
  try{const id=idOf(),pw=$('ap').value,n=$('an').value.trim();
   if(ar){if(!/^[A-Za-z0-9_.-]{3,16}$/.test(n))throw new Error('Nickname: 3 a 16 letras, números, _ . -');if(await fsGet('nicks/'+n.toLowerCase()))throw new Error('Ese nickname ya está en uso.')}
   const j=await aj(ar?'signUp':'signInWithPassword',{email:id,password:pw,returnSecureToken:true});
@@ -202,8 +217,29 @@ async function enter(){aerr('');if(!FB.p||!FB.k)return aerr('Cuentas no configur
   localStorage.ses=JSON.stringify(ses);localStorage.removeItem('guest');uid=ses.u;await sync();$('au').style.display='none';$('ap').value='';upd();loadSolo()}
  catch(e){aerr(e.message)}finally{$('ag').disabled=false}}
 $('am1').onclick=()=>{am='e';aui()};$('am2').onclick=()=>{am='p';aui()};$('at').onclick=()=>{ar=ar?0:1;aui()};$('ag').onclick=enter;
-$('ax').onclick=()=>{localStorage.guest=1;$('au').style.display='none'};
-$('bu').onclick=()=>{menu(0);if(ses){ses=null;localStorage.removeItem('ses');uid=gid();upd()}else{aerr('');$('au').style.display='flex'}};
+$('ax').onclick=()=>{if(gp){gp=0;ses=null;uid=gid();aui()}localStorage.guest=1;$('au').style.display='none'};
+$('bu').onclick=()=>{menu(0);if(ses){ses=null;localStorage.removeItem('ses');uid=gid();upd()}else{aerr('');showAu()}};
+
+// ===== Google SIN contraseña (Google Identity Services + Firebase signInWithIdp) =====
+let gp=0,ako=0,gnk=0,gok=0;
+function showAu(){$('au').style.display='flex';aui();gren()}
+function auG(){const d=(e,v)=>$(e).style.display=v?'':'none';d('gb',!gp);d('gh',!gp);d('ao',!gp);d('amr',!gp);d('ai',!gp);d('ap',!gp);d('at',!gp);$('ak').style.display=gp||ako?'flex':'none';if(gp){d('an',1);$('ag').textContent='Guardar nickname'}}
+$('ao').onclick=()=>{ako=ako?0:1;auG()};
+function gren(){const b=$('gb'),h=$('gh');if(gp)return;if(!FB.g||!FB.k){h.textContent='Google sin configurar (ver LEEME.md, sección 4).';return}
+ const go=()=>{try{if(!gok){google.accounts.id.initialize({client_id:FB.g,callback:gcb});gok=1}b.innerHTML='';google.accounts.id.renderButton(b,{theme:'filled_blue',size:'large',shape:'pill',text:'continue_with',locale:'es',width:Math.max(200,Math.min(340,b.clientWidth||280))});h.textContent=''}catch(e){h.textContent='No se pudo mostrar el botón de Google.'}};
+ if(window.google&&google.accounts&&google.accounts.id)return go();
+ if(gnk)return;gnk=1;const s=document.createElement('script');s.src='https://accounts.google.com/gsi/client';s.async=true;s.onload=go;s.onerror=()=>{gnk=0;h.textContent='Sin conexión: no se pudo cargar Google.'};document.head.appendChild(s)}
+async function fin(){localStorage.ses=JSON.stringify(ses);localStorage.removeItem('guest');uid=ses.u;await sync();$('au').style.display='none';$('ap').value='';gp=0;upd();loadSolo()}
+async function gcb(r){aerr('');if(!r||!r.credential)return;$('ag').disabled=true;
+ try{const j=await aj('signInWithIdp',{postBody:'id_token='+encodeURIComponent(r.credential)+'&providerId=google.com',requestUri:'http://localhost',returnIdpCredential:true,returnSecureToken:true});
+  ses={u:j.localId,t:j.idToken,r:j.refreshToken,e:Date.now()+j.expiresIn*1000,n:''};
+  const d=await fsGet('users/'+ses.u);if(d&&d.nick){ses.n=d.nick;await fin()}else{gp=1;aui();aerr('Elige tu nickname (visible para todos) y toca «Guardar nickname».')}}
+ catch(e){aerr(e.message)}finally{$('ag').disabled=false}}
+async function gnick(){$('ag').disabled=true;
+ try{const n=$('an').value.trim();if(!/^[A-Za-z0-9_.-]{3,16}$/.test(n))throw new Error('Nickname: 3 a 16 letras, números, _ . -');if(await fsGet('nicks/'+n.toLowerCase()))throw new Error('Ese nickname ya está en uso.');
+  const x=await fsSet('nicks/'+n.toLowerCase(),{u:ses.u},'?currentDocument.exists=false');if(!x||!x.ok)throw new Error('Nickname no disponible o sin conexión. Prueba otro.');
+  await fsSet('users/'+ses.u,{nick:n});ses.n=n;await fin()}
+ catch(e){aerr(e.message)}finally{$('ag').disabled=false}}
 
 let lp=0;function pres(fin){if(mode!='mp'||!FB.p||!ses||!G)return;const n=Date.now();if(!fin&&n-lp<900)return;lp=n;fsSet('rooms_'+G.seed+'/'+uid,{s:G.seed,x:G.x,y:G.y,n:nm(),t:n,d:fin||0})}
 setInterval(async()=>{if(mode!='mp'||!G)return;pres();const l=await fsList('rooms_'+G.seed);if(l)peers=l.filter(p=>Date.now()-p.t<8000||p.d)},2000);
@@ -211,12 +247,16 @@ async function showRank(){const i=$('info');i.textContent='Cargando…';const l=
  if(l==null){i.textContent='Ranking mundial no configurado (ver LEEME.md). Tu mejor nivel: '+best;return}
  l.sort((a,b)=>b.level-a.level||a.time-b.time);i.textContent='';const ol=document.createElement('ol');l.slice(0,50).forEach(d=>{const li=document.createElement('li');li.textContent=(d.id==uid?'⭐ ':'')+String(d.name).slice(0,16)+' · nivel '+d.level+' · '+Math.round(d.time)+'s';ol.appendChild(li)});i.appendChild(l.length?ol:document.createTextNode('Aún no hay jugadores.'))}
 const menu=v=>$('menu').style.display=v?'flex':'none';
-$('bm').onclick=()=>menu(1);$('bc').onclick=()=>menu(0);$('bs').onclick=()=>{menu(0);loadSolo()};$('lp').onclick=()=>{lv=Math.max(1,lv-1);localStorage.lv=lv;menu(0);loadSolo()};$('ln').onclick=()=>{lv=Math.min(Math.max(best,lv),lv+1);localStorage.lv=lv;menu(0);loadSolo()};$('bx').onclick=()=>{menu(0);restart()};
-$('bo').onclick=()=>{menu(0);if(FB.p&&!ses){aerr('Inicia sesión para jugar online.');$('au').style.display='flex';return}mode='mp';loadMp();msg(FB.p?'Carrera online: mismo nivel para todos cada 2 min':'Online sin configurar: juegas la ronda en solitario')};
-const padv=()=>{$('pad').style.display=localStorage.pad=='0'?'none':'';$('bp').textContent='🎮 Cruz en pantalla: '+(localStorage.pad=='0'?'NO':'SÍ');$('bn').textContent='🔊 Sonido: '+(localStorage.mute=='1'?'NO':'SÍ');resize()};
+$('bm').onclick=()=>{menu(1);chr()};$('bc').onclick=()=>menu(0);$('bs').onclick=()=>{menu(0);loadSolo()};$('lp').onclick=()=>{lv=Math.max(1,lv-1);localStorage.lv=lv;menu(0);loadSolo()};$('ln').onclick=()=>{lv=Math.min(Math.max(best,lv),lv+1);localStorage.lv=lv;menu(0);loadSolo()};$('bx').onclick=()=>{menu(0);restart()};
+$('bo').onclick=()=>{menu(0);if(FB.p&&!ses){aerr('Inicia sesión para jugar online.');showAu();return}mode='mp';loadMp();msg(FB.p?'Carrera online: mismo nivel para todos cada 2 min':'Online sin configurar: juegas la ronda en solitario')};
+const ZN={9:'Cerca',11:'Normal',14:'Lejos'};
+function chr(){const b=$('chr');b.innerHTML='';CH.forEach((q,i)=>{const e=document.createElement('button'),c=document.createElement('canvas');c.width=c.height=52;e.style.cssText='padding:2px;flex:0 0 30%;'+(i==chi?'border:2px solid #7dffbd;background:#2f4a7a':'');e.appendChild(c);const l=document.createElement('div');l.textContent=q.n;l.style.fontSize='11px';e.appendChild(l);
+  const T=TS;TS=48;blob(.04,.04,q.c[0],q.c[1],0,0,1,1,q.a,c.getContext('2d'));TS=T;e.onclick=()=>{chi=i;localStorage.ch=i;chr()};b.appendChild(e)})}
+$('bz').onclick=()=>{const z=+localStorage.z||9;localStorage.z=z==9?11:z==11?14:9;padv()};
+const padv=()=>{$('bz').textContent='🔍 Zoom: '+ZN[+localStorage.z||9];$('pad').style.display=localStorage.pad=='0'?'none':'';$('bp').textContent='🎮 Cruz en pantalla: '+(localStorage.pad=='0'?'NO':'SÍ');$('bn').textContent='🔊 Sonido: '+(localStorage.mute=='1'?'NO':'SÍ');resize()};
 $('bp').onclick=()=>{localStorage.pad=localStorage.pad=='0'?'1':'0';padv()};$('bn').onclick=()=>{localStorage.mute=localStorage.mute=='1'?'0':'1';padv()};
 $('bt').onclick=()=>{menu(0);tl=0;loadTut()};$('br').onclick=showRank;
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
-aui();upd();padv();if(FB.p&&FB.k&&!ses&&!localStorage.guest)$('au').style.display='flex';
+aui();upd();padv();if(FB.p&&FB.k&&!ses&&!localStorage.guest)showAu();
 resize();loadSolo();requestAnimationFrame(frame);
 </script></body></html>

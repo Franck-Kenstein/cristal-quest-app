@@ -1,4 +1,4 @@
-const V='cq25',FILES=['./','index.html','manifest.webmanifest','icon-192.png','icon-512.png'];
+const V='cq26',FILES=['./','index.html','manifest.webmanifest','icon-192.png','icon-512.png'];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(V).then(c=>c.addAll(FILES)).catch(()=>{}))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(n=>n!==V).map(n=>caches.delete(n)))).then(()=>self.clients.claim()))});
 // Solo intercepta archivos del propio sitio: Google (accounts.google.com), Firebase/Firestore y googleapis pasan directo.

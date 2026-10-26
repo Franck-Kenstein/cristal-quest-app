@@ -1,0 +1,9 @@
+Copyright (c) 2026 Francisco Javier Torres Vélez. Todos los derechos reservados.
+
+Creada y diseñada por Francisco Javier Torres Vélez.
+
+Queda prohibido copiar, modificar, distribuir o usar este software, total o
+parcialmente, sin autorización previa y por escrito del titular.
+
+(Si deseas publicarla como software libre, reemplaza este texto por la licencia
+que prefieras, por ejemplo MIT, conservando tu nombre como titular.)

@@ -14,7 +14,7 @@ button{background:#22304d;color:#fff;border:1px solid #4a5f8f;border-radius:10px
 #vg{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,#0000 40%,#000a 100%)}
 #fps{position:absolute;right:6px;bottom:6px;background:#000b;color:#7dffbd;font:11px monospace;padding:2px 6px;border-radius:6px;pointer-events:none;display:none}
 #msg{position:absolute;left:0;right:0;top:12px;text-align:center;font-weight:700;text-shadow:0 2px 6px #000}
-#pad{display:grid;grid-template-columns:repeat(3,clamp(74px,23vw,98px));grid-template-rows:repeat(2,clamp(60px,10vh,80px));gap:8px;justify-content:center;padding:6px 6px 10px}
+#pad{--c:clamp(74px,23vw,98px);--g:8px;display:grid;grid-template-columns:repeat(3,var(--c));grid-template-rows:repeat(2,clamp(60px,10vh,80px));gap:var(--g);justify-content:center;padding:6px 6px 10px}
 #pad button{font-size:30px;padding:0;border-radius:16px}#pad .u{grid-column:2}
 #menu,#au{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:5}
 #mb,#ab{background:#182136;border-radius:16px;padding:16px;width:min(360px,92%);max-height:85%;overflow:auto;display:flex;flex-direction:column;gap:10px}
@@ -56,7 +56,7 @@ button:active{transform:translateY(2px);box-shadow:0 1px 0 #08101f,inset 0 1px 0
 .ky{width:16px;height:15px;vertical-align:-3px;margin-right:2px}
 /* HUD de alto fijo: 2 filas reservadas, nada se mueve al recoger objetos */
 #top{flex:none;height:64px;padding:4px 8px;overflow:hidden;contain:layout paint}
-#top #bm,#top #brs{flex:none}
+#top #bm,#top #brs,#top #bsn{flex:none}
 #h{height:54px;overflow:hidden}
 .lb{height:14px;line-height:14px}
 .cs{height:38px;margin-top:2px;gap:2px 5px;align-content:flex-start;overflow:hidden}
@@ -65,7 +65,7 @@ button:active{transform:translateY(2px);box-shadow:0 1px 0 #08101f,inset 0 1px 0
 #xpb{flex:none}
 #pad{flex:none}
 #cw{contain:strict}
-@media(max-height:560px){#pad{grid-template-columns:repeat(3,70px);grid-template-rows:repeat(2,54px);gap:6px}#pad button{font-size:24px}}
+@media(max-height:560px){#pad{--c:70px;--g:6px;grid-template-columns:repeat(3,var(--c));grid-template-rows:repeat(2,54px);gap:var(--g)}#pad button{font-size:24px}}
 
 /* ===== v19: interfaz moderna (estática, sin coste por fotograma) ===== */
 #menu,#au{background:#050a14ee}
@@ -135,7 +135,7 @@ button:active{transform:translateY(2px);box-shadow:0 1px 0 #0a1429,inset 0 1px 0
 
 /* ===== v26: HUD superior renovado + flecha arriba ancha ===== */
 #top{height:68px;padding:5px 8px;gap:8px;align-items:center;border-bottom:0;background:linear-gradient(#1f2f55,#0f1830);box-shadow:0 4px 14px #000a,inset 0 -2px 0 var(--ac),inset 0 1px 0 #ffffff25}
-#top #bm,#top #brs{width:42px;height:42px;padding:0;border-radius:50%;font-size:19px;display:flex;align-items:center;justify-content:center}
+#top #bm,#top #brs,#top #bsn{width:42px;height:42px;padding:0;border-radius:50%;font-size:19px;display:flex;align-items:center;justify-content:center}@media(max-width:399px){#top #bsn{display:none}}
 #h{flex:1;min-width:0;height:58px;display:flex;flex-direction:column;justify-content:center;gap:5px;font-size:12px;line-height:1.2}
 .hl{display:flex;align-items:center;gap:8px;height:22px;overflow:hidden;white-space:nowrap}
 .hl b{font-size:16px;font-weight:900;letter-spacing:.3px;text-shadow:0 2px 0 #0008;flex:none}
@@ -145,10 +145,10 @@ button:active{transform:translateY(2px);box-shadow:0 1px 0 #0a1429,inset 0 1px 0
 .ch{height:25px;font-size:13px;padding:0 8px;border-radius:999px;flex:none;border:1px solid #ffffff2a;background-color:#0007}
 .ch.cy{font-size:14px;min-width:70px;justify-content:center}.ch.pu{color:#7dffbd;border-color:#7dffbd88}
 #xpb{height:6px;background:#000c}
-#pad .u{grid-column:1/-1}
+#pad .u{grid-column:1/-1;justify-self:center;width:calc(var(--c)*2 + var(--g)*2)}
 #pad button{touch-action:none}
 </style></head><body>
-<div id="top"><button id="bm" title="Pausa">⏸</button><button id="brs" title="Reiniciar nivel">↻</button><div id="h"></div></div><div id="xpb"><i id="xpi"></i></div>
+<div id="top"><button id="bm" title="Pausa">⏸</button><button id="brs" title="Reiniciar nivel">↻</button><button id="bsn" title="Sonido">🔊</button><div id="h"></div></div><div id="xpb"><i id="xpi"></i></div>
 <div id="cw"><canvas id="c"></canvas><div id="vg"></div><div id="msg"></div><div id="fps"></div></div>
 <div id="pad"><button class="u" data-d="0,-1">▲</button><button data-d="-1,0" style="grid-row:2">◀</button><button data-d="0,1" style="grid-row:2">▼</button><button data-d="1,0" style="grid-row:2">▶</button></div>
 <div id="hm"><div id="hbg"><i style="--w:34px;--x:6%;--d:15s;--l:-2s"></i><i style="--w:22px;--x:20%;--d:11s;--l:-8s"></i><i style="--w:44px;--x:34%;--d:18s;--l:-5s"></i><i style="--w:26px;--x:50%;--d:13s;--l:-11s"></i><i style="--w:38px;--x:64%;--d:16s;--l:-1s"></i><i style="--w:20px;--x:78%;--d:10s;--l:-6s"></i><i style="--w:30px;--x:90%;--d:14s;--l:-9s"></i></div>
@@ -869,7 +869,7 @@ const go=()=>{menu(0);pzv(0);home(0)};
 function hmUp(){const l=hl();$('hi').textContent='⭐ Héroe nivel '+l+' · '+rk(l)+'\n📍 Nivel '+lv+' · 🏆 Mejor '+best;$('hi').style.whiteSpace='pre-line';$('hp').textContent='▶ JUGAR · Nivel '+lv;$('hu').lastChild.textContent=ses?String(ses.n).slice(0,9):'Entrar';
  for(const[id,L,cur]of[['hch',CH,chi],['hpt',PETS,pti]]){const q=L[cur],c=$(id);c.width=c.height=192;const K=c.getContext('2d');K.clearRect(0,0,192,192);if(!q||!q.c)continue;const T=TS;TS=70;try{K.scale(2,2);if(id=='hch')blob(.18,.3,q.c[0],q.c[1],0,0,1,1,q.a,K,l);else{K.translate(13,18);pet(K,70,q,0,0,0,1,l)}}finally{TS=T}}}
 $('hp').onclick=()=>home(0);$('ho').onclick=()=>{home(0);$('bo').click()};$('hr').onclick=()=>{menu(1,0);showRank()};$('hq').onclick=()=>{menu(1,0);$('bq').click()};$('hh').onclick=()=>menu(1,1);document.querySelectorAll('.hcd').forEach(e=>e.onclick=()=>menu(1,1));$('hg').onclick=()=>menu(1,2);$('hu').onclick=()=>{if(ses)menu(1,2);else{aerr('');showAu()}};
-$('pzc').onclick=()=>pzv(0);$('pzr').onclick=()=>{pzv(0);restart()};$('pzm').onclick=()=>menu(1,0);$('pzh').onclick=()=>home(1);$('pzn').onclick=()=>$('bn').click();$('pzu').onclick=()=>$('bmu').click();
+$('pzc').onclick=()=>pzv(0);$('pzr').onclick=()=>{pzv(0);restart()};$('pzm').onclick=()=>menu(1,0);$('pzh').onclick=()=>home(1);$('pzn').onclick=()=>$('bn').click();$('bsn').onclick=()=>$('bn').click();$('pzu').onclick=()=>$('bmu').click();
 document.addEventListener('keydown',e=>{if(e.target.tagName=='INPUT')return;if(e.key=='Escape'||e.key=='p'||e.key=='P'){e.preventDefault();if(uiM.style.display=='flex')menu(0);else if(PZV)pzv(0);else if(!HM&&uiA.style.display!='flex')pzv(1)}});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&G&&!G.done&&mode!='mp'&&!HM)pzv(1)});
 $('bm').onclick=()=>pzv(1);$('brs').onclick=()=>{if(G&&!G.done&&uiM.style.display!='flex'&&uiA.style.display!='flex')restart()};$('bc').onclick=()=>menu(0);$('bs').onclick=()=>{go();loadSolo()};$('lp').onclick=()=>{lv=Math.max(1,lv-1);localStorage.lv=lv;go();loadSolo()};$('ln').onclick=()=>{lv=Math.min(Math.max(best,lv),lv+1);localStorage.lv=lv;go();loadSolo()};$('bx').onclick=()=>{go();restart()};
@@ -883,7 +883,7 @@ const tg=(id,ico,txt,val,cls)=>{const b=$(id);if(!b)return;b.className='row '+cl
 const tgUp=()=>{const sn=localStorage.mute!='1',mm=localStorage.mus!='0',vb=localStorage.vib!='0',pd=localStorage.pad!='0';
  tg('bn','🔊','Sonido',sn?'SÍ':'NO',sn?'on':'off');tg('bmu','🎵','Música',mm?'SÍ':'NO',mm?'on':'off');tg('bvb','📳','Vibración',vb?'SÍ':'NO',vb?'on':'off');tg('bp','🎮','Cruz de dirección',pd?'SÍ':'NO',pd?'on':'off');
  tg('bz','🔍','Zoom',ZN[+localStorage.z||9],'val');tg('bgq','🎞','Gráficos',{a:'Auto',h:'Alta',l:'Baja'}[localStorage.gq||'a'],'val');tg('bfps','📊','Mostrar FPS',fpsO?'SÍ':'NO',fpsO?'on':'off');
- tg('pzn','🔊','Sonido',sn?'SÍ':'NO',sn?'on':'off');tg('pzu','🎵','Música',mm?'SÍ':'NO',mm?'on':'off')};
+ {const q=$('bsn');if(q)q.textContent=sn?'🔊':'🔇'}tg('pzn','🔊','Sonido',sn?'SÍ':'NO',sn?'on':'off');tg('pzu','🎵','Música',mm?'SÍ':'NO',mm?'on':'off')};
 const padv=()=>{$('fps').style.display=fpsO?'block':'none';$('pad').style.display=localStorage.pad=='0'?'none':'';tgUp();resize()};
 $('bvb').onclick=()=>{localStorage.vib=localStorage.vib=='0'?'1':'0';padv();vib(30)};$('bfps').onclick=()=>{fpsO=!fpsO;localStorage.fps=fpsO?'1':'0';padv()};$('bp').onclick=()=>{localStorage.pad=localStorage.pad=='0'?'1':'0';padv()};$('bn').onclick=()=>{localStorage.mute=localStorage.mute=='1'?'0':'1';padv()};$('bmu').onclick=()=>{localStorage.mus=localStorage.mus=='0'?'1':'0';padv()};$('bgq').onclick=()=>{const o=['a','h','l'],n=o[(o.indexOf(localStorage.gq||'a')+1)%3];localStorage.gq=n;if(n=='a'){localStorage.removeItem('dp');localStorage.removeItem('lowq');LOW=0;fa=16;fc=0}padv()};
 $('bt').onclick=()=>{go();tl=0;loadTut()};$('br').onclick=showRank;
